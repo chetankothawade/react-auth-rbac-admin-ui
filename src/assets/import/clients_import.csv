@@ -1,0 +1,2 @@
+title,name,email,position,company_name,website,vat_number,gstin,pan_no,address,city,state,state_code,country_id,zip,phone,fax,bank_name,bank_branch,account_name,account_number,ifsc_code,notes,status
+Miss,Seema Vishwas,sima@yopmail.com,MD,SIMA LTD,https://www.google.com/,VAT1111111,27ABCDE1234F2Z5,ABCDE1234F,https://www.google.com/,Pune,Maharashtra,MH,106,411045,998-555-5555,1.11111E+13,HDFC,PUNE,SIMA,8552222222,IFSC121212,asdas,active
