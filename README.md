@@ -28,7 +28,7 @@ Current keys:
 ```env
 VITE_API_BASE_URL=http://localhost:8020/api/
 VITE_ENV_NAME=development
-VITE_SITE_NAME=SCIP
+VITE_SITE_NAME=CK
 ```
 
 If your backend URL changes, update `VITE_API_BASE_URL`.
