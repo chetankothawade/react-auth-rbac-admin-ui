@@ -282,7 +282,7 @@ const ModuleList = () => {
                                             <tbody>
                                                 {modules.length === 0 ? (
                                                     <tr>
-                                                        <td colSpan={7} className="text-center text-muted py-5">
+                                                        <td colSpan={8} className="text-center text-muted py-5">
                                                             No modules found.
                                                         </td>
                                                     </tr>
@@ -386,7 +386,7 @@ const ModuleList = () => {
                                                                     )}
 
                                                                     {/* SUB-MODULE LIST */}
-                                                                    {!parentId && (
+                                                                    {!parentId && m.is_sub_module === "N" && (
                                                                         <OverlayTrigger placement="top" overlay={<Tooltip>View Sub-Modules</Tooltip>}>
                                                                             <Button
                                                                                 size="sm"
