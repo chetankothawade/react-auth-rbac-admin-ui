@@ -28,7 +28,7 @@ const ModuleCreate = () => {
   const [loading, setLoading] = useState(true);
   const [modules, setModules] = useState([]);
 
-  const parentIdFromUrl = searchParams.get("parentId") || 0;
+  const parentIdFromUrl = Number(searchParams.get("parentId") || 0);
 
   // form setup
   const {
@@ -68,7 +68,9 @@ const ModuleCreate = () => {
     const loadModules = async () => {
       try {
         const res = await moduleService.getList();
-        if (res.data.success) setModules(res.data.data.module || []);
+        if (res?.data?.status) {
+          setModules(res?.data?.data || []);
+        }
       } catch {
         toast.error("Failed to load modules");
       }
@@ -76,16 +78,32 @@ const ModuleCreate = () => {
     loadModules();
   }, []);
 
+  useEffect(() => {
+    if (parentIdFromUrl !== 0) {
+      setValue("is_sub_module", "Y");
+      setValue("parent_id", String(parentIdFromUrl), { shouldValidate: true });
+    }
+  }, [parentIdFromUrl, setValue, modules]);
+
   // Submit Handler
   const saveModule = async (formData) => {
     try {
-      const response = await moduleService.create(formData);
+      const payload = {
+        ...formData,
+        parent_id:
+          formData.is_sub_module === "Y" && formData.parent_id
+            ? Number(formData.parent_id)
+            : null,
+        icon: formData.is_sub_module === "Y" ? null : formData.icon,
+      };
+
+      const response = await moduleService.create(payload);
 
       if (response?.data?.status) {
         toast.success(response?.data?.message || "Module created successfully");
 
-        if (formData.is_sub_module === "Y") {
-          navigate(`/module/${formData.parent_id}`, { replace: true });
+        if (payload.is_sub_module === "Y" && payload.parent_id) {
+          navigate(`/module/${payload.parent_id}`, { replace: true });
         } else {
           navigate("/module", { replace: true });
         }

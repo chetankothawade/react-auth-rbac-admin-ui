@@ -22,7 +22,7 @@ import UseAccess from "../../../hooks/UseAccess";
 
 const ModuleList = () => {
 
-    const { id: parentId } = useParams(); // parent module for sub-modules
+    const { uuid: parentId } = useParams(); // parent module id for sub-modules
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -163,7 +163,7 @@ const ModuleList = () => {
                 }
 
             } catch (error) {
-                toast.error("Failed to update status");
+                toast.error(error.message || "Failed to update status");
             }
         },
         [fetchModules]
@@ -386,19 +386,17 @@ const ModuleList = () => {
                                                                     )}
 
                                                                     {/* SUB-MODULE LIST */}
-                                                                    {m.parentId === 0 && (
+                                                                    {!parentId && (
                                                                         <OverlayTrigger placement="top" overlay={<Tooltip>View Sub-Modules</Tooltip>}>
                                                                             <Button
                                                                                 size="sm"
                                                                                 className="btn-soft-primary"
-                                                                                onClick={() => navigate(`/module/${m.uuid}`)}
-                                                                                disabled={m.isSubModule !== "Y"}
+                                                                                onClick={() => navigate(`/module/${m.id}`)}
                                                                             >
                                                                                 <i className="ri-file-list-2-line" />
                                                                             </Button>
                                                                         </OverlayTrigger>
                                                                     )}
-
                                                                 </div>
                                                             </td>
 

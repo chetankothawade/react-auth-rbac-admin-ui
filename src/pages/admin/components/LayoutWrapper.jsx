@@ -121,16 +121,19 @@ const LayoutWrapper = ({ children, loading = false }) => {
   /**
    * Adds shadow to header when page scrolls down
    */
+
+  const scrollNavigation = () => {
+    const scrollTop = document.documentElement.scrollTop;
+    setHeaderClass(scrollTop > 50 ? "topbar-shadow" : "");
+  };
+
+
   useEffect(() => {
     window.addEventListener("scroll", scrollNavigation, true);
     return () =>
       window.removeEventListener("scroll", scrollNavigation, true);
   }, []);
 
-  const scrollNavigation = () => {
-    const scrollTop = document.documentElement.scrollTop;
-    setHeaderClass(scrollTop > 50 ? "topbar-shadow" : "");
-  };
 
   /* ----------------------- Theme Handling ------------------------- */
 

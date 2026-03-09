@@ -26,7 +26,7 @@ const EditModule = () => {
   const { uuid } = useParams();
   const [searchParams] = useSearchParams();
   const page = searchParams.get("page") || "1";
-  const parentIdFromUrl = searchParams.get("parentId") || 0;
+  const parentIdFromUrl = Number(searchParams.get("parentId") || 0);
 
   const [loading, setLoading] = useState(true);
   const [modules, setModules] = useState([]);
@@ -63,7 +63,7 @@ const EditModule = () => {
     try {
       const response = await moduleService.getList();
       if (response?.data?.status) {
-        setModules(response.data.data || []);
+        setModules(response?.data?.data || []);
       }
     } catch {
       toast.error("Failed to load modules");
@@ -81,9 +81,10 @@ const EditModule = () => {
       }
 
       const m = response.data.data;
-      ["name", "url", "icon", "seq_no", "is_permission", "is_sub_module", "parent_id"].forEach((field) =>
+      ["name", "url", "icon", "seq_no", "is_permission", "is_sub_module"].forEach((field) =>
         setValue(field, m[field])
       );
+      setValue("parent_id", m.parent_id ?? 0);
       setValue("status", m.status || "active");
 
     } catch (err) {
@@ -101,15 +102,24 @@ const EditModule = () => {
   /** Update Module */
   const updateModule = async (formData) => {
     try {
-      const response = await moduleService.update(uuid, formData);
+      const payload = {
+        ...formData,
+        parent_id:
+          formData.is_sub_module === "Y" && formData.parent_id
+            ? Number(formData.parent_id)
+            : null,
+        icon: formData.is_sub_module === "Y" ? null : formData.icon,
+      };
+
+      const response = await moduleService.update(uuid, payload);
 
       if (response?.data?.status) {
         toast.success(response?.data?.message || "Module updated successfully");
 
         // Redirect after update
         const redirectUrl =
-          formData.is_sub_module === "Y"
-            ? `/module/${formData.parent_id}`
+          payload.is_sub_module === "Y" && payload.parent_id
+            ? `/module/${payload.parent_id}`
             : `/module?page=${page}`;
 
         navigate(redirectUrl, { replace: true });

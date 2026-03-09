@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import SimpleBar from 'simplebar-react';
 import * as FeatherIcons from 'react-feather';
-import { Collapse, Container, Nav } from 'react-bootstrap';
+import { Container, Nav } from 'react-bootstrap';
 import { Link, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import SidebarSkeleton from "../../../components/Skeleton/SidebarSkeleton";
@@ -46,36 +46,39 @@ const CollapsibleMenuItem = ({ mod, openMenu, setOpenMenu, location }) => (
   <li className="nav-item">
     <Link
       to="#"
-      className="nav-link menu-link d-flex align-items-center collapsed"
+      className={`nav-link menu-link d-flex align-items-center ${openMenu === mod.id ? "" : "collapsed"}`}
+      data-bs-toggle="collapse"
       onClick={(e) => {
         e.preventDefault();
         setOpenMenu(openMenu === mod.id ? null : mod.id);
       }}
+      role="button"
       aria-controls={`submenu-${mod.id}`}
-      aria-expanded={openMenu === mod.id}
+      aria-expanded={openMenu === mod.id ? "true" : "false"}
     >
       {renderIcon(mod.icon)}
       <span className="ms-2">{mod.name}</span>
     </Link>
 
-    <Collapse in={openMenu === mod.id}>
-      <div id={`submenu-${mod.id}`} className="menu-dropdown">
-        <Nav className="nav-sm flex-column">
-          {mod.children.map((child) => (
-            <Nav.Item key={child.id}>
-              <Nav.Link
-                as={Link}
-                onClick={closeSidebarOnMobile}
-                to={child.url}
-                className={location.pathname === child.url ? "active" : ""}
-              >
-                {child.name}
-              </Nav.Link>
-            </Nav.Item>
-          ))}
-        </Nav>
-      </div>
-    </Collapse>
+    <div
+      id={`submenu-${mod.id}`}
+      className={`menu-dropdown collapse ${openMenu === mod.id ? "show" : ""}`}
+    >
+      <Nav className="nav-sm flex-column">
+        {mod.children.map((child) => (
+          <Nav.Item key={child.id}>
+            <Nav.Link
+              as={Link}
+              onClick={closeSidebarOnMobile}
+              to={child.url}
+              className={location.pathname === child.url ? "active" : ""}
+            >
+              {child.name}
+            </Nav.Link>
+          </Nav.Item>
+        ))}
+      </Nav>
+    </div>
   </li>
 );
 

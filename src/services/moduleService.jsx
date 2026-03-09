@@ -5,11 +5,12 @@ const moduleService = {
        LIST MODULES  (with optional parentId)
        ------------------------------------------------------------- */
     list: (parentId = null, params = {}) => {
-        const query = new URLSearchParams(params).toString();
-        const url = parentId
-            ? `/modules/${parentId}?${query}`
-            : `/modules?${query}`;
-        return http.get(url);
+        const queryParams = new URLSearchParams({
+            ...params,
+            ...(parentId ? { parent_id: parentId } : {}),
+        });
+
+        return http.get(`/modules?${queryParams.toString()}`);
     },
 
     /* -------------------------------------------------------------
@@ -30,12 +31,7 @@ const moduleService = {
        UPDATE MODULE
        ------------------------------------------------------------- */
     update: (id, data) => {
-        const url =
-            data.is_sub_module === "Y"
-                ? `/modules/${id}?parentId=${data.parent_id}`
-                : `/modules/${id}`;
-
-        return http.put(url, data);
+        return http.put(`/modules/${id}`, data);
     },
 
     /* -------------------------------------------------------------
